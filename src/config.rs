@@ -4,7 +4,7 @@ use std::{fs, net::SocketAddr, path::Path};
 #[derive(Deserialize, Clone)]
 pub struct Config {
     pub hosts: Vec<Host>,
-    pub port: Option<u16>,
+    pub listen_addr: Option<SocketAddr>,
 }
 
 #[derive(Deserialize, Clone)]
