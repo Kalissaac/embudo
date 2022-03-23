@@ -11,20 +11,12 @@ use lazy_static::lazy_static;
 use std::env;
 
 lazy_static! {
-    static ref CONFIG: Config = {
-        let config_path = env::args().nth(1).expect("no config path given");
-        config::get_config(Some(&config_path))
-    };
+    static ref CONFIG: Config = config::get_config(env::args().nth(1));
     static ref HTTP_CLIENT: Client<HttpConnector, Body> = Client::new();
 }
 
 #[tokio::main]
 async fn main() {
-    if env::args().len() < 2 {
-        println!("Usage: embudo <path to config file>");
-        return;
-    }
-
     let service = make_service_fn(move |_| async { Ok::<_, hyper::Error>(service_fn(handle)) });
 
     let addr = CONFIG.listen_addr.unwrap_or(([127, 0, 0, 1], 80).into());
