@@ -29,10 +29,9 @@ async fn main() {
 
 async fn handle(mut req: Request<Body>) -> Result<Response<Body>, hyper::Error> {
     let request_host = {
-        let headers = req.headers();
         let mut host = "127.0.0.1";
-        if let Some(h) = headers.get("host") {
-            host = h.to_str().unwrap_or("127.0.0.1");
+        if let Some(h) = req.headers().get("host").and_then(|h| h.to_str().ok()) {
+            host = h;
         }
         host
     };
